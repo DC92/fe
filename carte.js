@@ -40,6 +40,8 @@ function initCarte() {
       autoCenter: true,
     }).addTo(map);
 
+    L.Permalink.setup(map);
+
     requeteAPI(
       'cartes',
       '/api/bbox?&nb_points=all&bbox=4.8%2C44.5%2C7.4%2C46.2', // French north Apls
