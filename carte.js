@@ -1,7 +1,5 @@
 /* global L, requeteAPI, serveurApi, appliqueDonnees */
 
-//TODO BUG ligne blanche entre les dalles
-
 /*****************
  * Carte Leaflet *
  *****************/
@@ -11,12 +9,15 @@ let map = null;
 const baseLayers = {
   OpenHikingMap: L.tileLayer('https://tile.openmaps.fr/openhikingmap/{z}/{x}/{y}.png', {
     maxZoom: 18,
-    attribution: '<a href="https://www.openstreetmap.org/copyright">&copy; OpenStreetMap</a>. ' +
-      '<a href="https://wiki.openstreetmap.org/wiki/openhikingmap">openhikingmap</a>',
+    attribution: '<a href="https://wiki.openstreetmap.org/wiki/OpenHikingMap">© OpenHikingMap</a>|' +
+      '<a href="https://openmaps.fr/donate">❤️ Donation</a>|' +
+      '<a href="http://www.openstreetmap.org/copyright">© OpenStreetMap</a>|' +
+      '<a target="_blank" href="https://wiki.openstreetmap.org/wiki/OpenHikingMap#Map_Legend">Légende</a>',
   }),
   OpenStreetMap: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    attribution: '© OpenStreetMap'
+    attribution: '&copy;<a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>|' +
+      '<a target="_blank" href="https://www.openstreetmap.org/panes/legend">Légende</a>'
   }),
 };
 
@@ -34,7 +35,6 @@ function initCarte() {
     new L.Control.Geocoder({
       position: 'topleft',
     }).addTo(map);
-    //TODO Access to fetch at 'https://nominatim.openstreetmap.org/...' has been blocked by CORS policy:
 
     new L.Control.Gps({
       autoCenter: true,
