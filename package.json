@@ -1,0 +1,15 @@
+{
+  "name": "Lint & beautify",
+  "version": "1.0.0",
+  "description": "Lint & beautify code",
+  "author": "Dominique Cavailhez",
+  "type": "module",
+  "scripts": {
+    "lint": "npx eslint src/*.js",
+    "beautify": "js-beautify -s=2 *.html src/*.css src/*.js"
+  },
+  "dependencies": {
+    "eslint": "latest",
+    "js-beautify": "latest"
+  }
+}
