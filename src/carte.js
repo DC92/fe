@@ -20,6 +20,19 @@ const baseLayers = {
     attribution: '&copy;<a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>|' +
       '<a target="_blank" href="https://www.openstreetmap.org/panes/legend">Légende</a>'
   }),
+
+  // https://geoservices.ign.fr/documentation/services/utilisation-web/extension-pour-leaflet
+  // https://ignf.github.io/geoportal-extensions/leaflet-latest/jsdoc/module-Layers.html#.WMTS
+  'Ign plan': L.geoportalLayer.WMTS({
+    layer: 'GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2',
+    format: 'image/png', //TODO BUG
+    'attribution': 'Orthophotos - Carte © IGN/Geoportail',
+    'maxNativeZoom': 19,
+    'maxZoom': 22,
+  }),
+  'Ign photo': L.geoportalLayer.WMTS({
+    layer: 'ORTHOIMAGERY.ORTHOPHOTOS',
+  }),
 };
 
 /* eslint-disable-next-line no-unused-vars */
