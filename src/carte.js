@@ -37,37 +37,65 @@ const baseLayers = {
   }),
 };
 
+/* GeoJson layer from remote url. Options:
+ * iconUrl: '<url>' | function(feature),
+ * iconWidth: 16, // (Pixels) for a square icon |
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
+ * label: '<text>' | function(feature), //TO BE DONE
+ * tooltip: '<text>' | function(feature),
+ * click: function(feature),
+ */
+class GeoJsonRemote extends L.geoJson {
+  constructor(options) {
+    const iw = options.iconWidth || 16;
+
+    super(null, {
+      pointToLayer: (feature, latlng) =>
+        L.marker(latlng, {
+          icon: L.icon({
+            iconSize: [iw, iw],
+            iconAnchor: [iw / 2, iw / 2],
+            ...options,
+            iconUrl: typeof options.iconUrl === 'function' ? options.iconUrl(feature) : options.iconUrl,
+          }),
+        }),
+
+      onEachFeature: (feature, layer) => {
+        // Etiquette sur les points
+        //TODO permanent label
+        if (options.tooltip)
+          layer.bindTooltip(
+            typeof options.tooltip === 'function' ? options.tooltip(feature) : options.tooltip, {
+              direction: 'center',
+              offset: L.point(0, -24),
+            }
+          ).openTooltip();
+
+        // Click
+        if (options.click)
+          layer.on({
+            click: (evt) => options.click(feature, evt),
+          });
+      },
+
+      ...options,
+    });
+  }
+}
+
 const wriPoiLayer =
-  L.geoJson(null, {
-    // Icônes WRI
-    pointToLayer: (feature, latlng) => L.marker(latlng, {
-      icon: L.icon({
-        iconUrl: serveurApi + '/images/icones/' + feature.properties.type.icone + '.svg',
-        iconSize: [24, 24],
-        iconAnchor: [12, 12],
-      })
-    }),
+  new GeoJsonRemote({
+    iconUrl: feature => serveurApi + '/images/icones/' + feature.properties.type.icone + '.svg',
+    iconWidth: 24,
+    tooltip: feature => feature.properties.nom,
+    click: feature => {
+      // Affiche les donnés d'entête de la fiche qui sont disponibles dans l'API bbox
+      appliqueDonnees('point', feature.properties);
 
-    onEachFeature: (feature, layer) => {
-      // Etiquette sur les points
-      layer.bindTooltip(
-        feature.properties.nom, {
-          direction: 'center',
-          offset: L.point(0, -24),
-        }
-      ).openTooltip();
-
-      // Clic
-      layer.on({
-        click: () => {
-          // Affiche les donnés d'entête de la fiche qui sont disponibles dans l'API bbox
-          appliqueDonnees('point', feature.properties);
-
-          // Affiche la page point
-          window.location.hash = 'point=' + feature.properties.id;
-        },
-      });
-    }
+      // Affiche la page point
+      window.location.hash = 'point=' + feature.properties.id;
+    },
   });
 
 /* eslint-disable-next-line no-unused-vars */
