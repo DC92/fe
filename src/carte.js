@@ -7,6 +7,7 @@
 let map = null;
 
 const baseLayers = {
+  //TODO BUG ligne blanche entre dalles
   OpenHikingMap: L.tileLayer('https://tile.openmaps.fr/openhikingmap/{z}/{x}/{y}.png', {
     maxZoom: 18,
     attribution: '<a href="https://wiki.openstreetmap.org/wiki/OpenHikingMap">© OpenHikingMap</a>|' +
@@ -32,12 +33,12 @@ function initCarte() {
 
     new L.Control.Fullscreen().addTo(map);
 
-    new L.Control.Geocoder({
-      position: 'topleft',
-    }).addTo(map);
-
     new L.Control.Gps({
       autoCenter: true,
+    }).addTo(map);
+
+    new L.Control.Geocoder({
+      position: 'topleft',
     }).addTo(map);
 
     L.Permalink.setup(map);
