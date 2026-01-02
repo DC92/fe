@@ -46,10 +46,12 @@ function initCarte() {
 
     new L.Control.Fullscreen().addTo(map);
 
+//TODO BUG image controle trop grande sous FF
     new L.Control.Gps({
       autoCenter: true,
     }).addTo(map);
 
+//TODO BUG image controle trop grande sous FF
     new L.Control.Geocoder({
       position: 'topleft',
     }).addTo(map);
