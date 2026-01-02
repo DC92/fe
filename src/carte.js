@@ -54,7 +54,7 @@ function initCarte() {
       position: 'topleft',
     }).addTo(map);
 
-    L.Permalink.setup(map);
+    L.Permalink.setup(map); //TODO BUG Interférence permalink templateur
 
     requeteAPI(
       'cartes',
