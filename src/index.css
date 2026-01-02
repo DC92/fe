@@ -123,14 +123,12 @@ body:not([class*="attente"]) .attente {
 
 .leaflet-control-gps .gps-button {
   background-image: url('../assets/gps/gps-icon.png');
-}.leaflet-container img.leaflet-tile {
-    /* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
-    mix-blend-mode: plus-lighter;
 }
 
-/* Avoid white lines between tiles in Opera & Chrome */
+/* Avoid white lines between tiles in Opera & Chrome
+ * See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
 .leaflet-container img.leaflet-tile {
-mix-blend-mode: normal;
-width: 256px !important;
-height: 256px !important;
+  mix-blend-mode: normal;
+  width: 256px !important;
+  height: 256px !important;
 }

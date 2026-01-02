@@ -23,6 +23,7 @@ const baseLayers = {
 
   // https://geoservices.ign.fr/documentation/services/utilisation-web/extension-pour-leaflet
   // https://ignf.github.io/geoportal-extensions/leaflet-latest/jsdoc/module-Layers.html#.WMTS
+  /* eslint-disable-next-line new-cap */
   'Ign plan': L.geoportalLayer.WMTS({
     layer: 'GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2',
     format: 'image/png', //TODO BUG
@@ -30,6 +31,7 @@ const baseLayers = {
     'maxNativeZoom': 19,
     'maxZoom': 22,
   }),
+  /* eslint-disable-next-line new-cap */
   'Ign photo': L.geoportalLayer.WMTS({
     layer: 'ORTHOIMAGERY.ORTHOPHOTOS',
   }),
@@ -46,12 +48,12 @@ function initCarte() {
 
     new L.Control.Fullscreen().addTo(map);
 
-//TODO BUG image controle trop grande sous FF
+    //TODO BUG image controle trop grande sous FF
     new L.Control.Gps({
       autoCenter: true,
     }).addTo(map);
 
-//TODO BUG image controle trop grande sous FF
+    //TODO BUG image controle trop grande sous FF
     new L.Control.Geocoder({
       position: 'topleft',
     }).addTo(map);
