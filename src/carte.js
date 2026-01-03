@@ -25,6 +25,7 @@ const baseLayers = {
   // https://ignf.github.io/geoportal-extensions/leaflet-latest/jsdoc/module-Layers.html#.WMTS
   /* eslint-disable-next-line new-cap */
   'Ign plan': L.geoportalLayer.WMTS({
+    //TODO BUG format non pris en compte
     layer: 'GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2',
     format: 'image/png', //TODO BUG
     'attribution': 'Orthophotos - Carte © IGN/Geoportail',
@@ -50,7 +51,7 @@ class GeoJsonRemote extends L.geoJson {
   constructor(options) {
     const iw = options.iconWidth || 16;
 
-    super(null, {
+    super(options.json || null, {
       pointToLayer: (feature, latlng) =>
         L.marker(latlng, {
           icon: L.icon({
@@ -84,9 +85,12 @@ class GeoJsonRemote extends L.geoJson {
   }
 }
 
+const xxserveurApi = 'https://www.refuges.info';
+
 const wriClusterLayer = new L.MarkerClusterGroup(),
   wriPoiLayer = new GeoJsonRemote({
-    iconUrl: feature => serveurApi + '/images/icones/' + feature.properties.type.icone + '.svg',
+    json: JSON.parse(localStorage.getItem('poiwri')),
+    iconUrl: feature => xxserveurApi + '/images/icones/' + feature.properties.type.icone + '.svg',
     iconWidth: 24,
     tooltip: feature => feature.properties.nom,
     click: feature => {
@@ -121,18 +125,23 @@ function initCarte() {
 
     L.Permalink.setup(map); //TODO BUG Interférence permalink templateur
 
+    // WRI poi & clusters
+    wriClusterLayer.addLayer(wriPoiLayer);
+    wriClusterLayer.addTo(map);
+
     requeteAPI(
       'cartes',
       '/api/bbox?&nb_points=all&bbox=4.8%2C44.5%2C7.4%2C46.2', // French north Apls
       null,
       json => {
+        localStorage.setItem('poiwri', JSON.stringify(json));
+        wriPoiLayer.clearLayers();
+        wriClusterLayer.clearLayers();
         wriPoiLayer.addData(json);
         wriClusterLayer.addLayer(wriPoiLayer);
-        wriClusterLayer.addTo(map);
       }
     );
   }
-  map.invalidateSize(); // Recharge la carte
 
   return map;
 }
