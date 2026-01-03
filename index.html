@@ -11,8 +11,11 @@ Ceci est un démonstrateur front-end pour refuges.info
   <link href="https://www.refuges.info/images/icones/favicon.svg" rel="icon" type="image/svg+xml" />
   <title>Refuges.info</title>
 
+  <!-- Leaflet -->
   <link href="assets/leaflet/leaflet.css" rel="stylesheet" />
   <script src="assets/leaflet/leaflet.js"></script>
+
+  <!-- Controls -->
   <link href="assets/fullscreen/leaflet.fullscreen.css" rel="stylesheet" />
   <script src="assets/fullscreen/Leaflet.fullscreen.min.js"></script>
   <link href="assets/geocoder/Control.Geocoder.css" rel="stylesheet" />
@@ -21,13 +24,26 @@ Ceci est un démonstrateur front-end pour refuges.info
   <script src="assets/gps/leaflet-gps.min.js"></script>
   <script src="assets/permalink/leaflet.permalink.min.js"></script>
 
+  <!-- Base layers -->
   <script src="assets/ign/GpPluginLeaflet.js"></script>
   <link href="assets/ign/GpPluginLeaflet.css" rel="stylesheet" />
 
-  <link href="src/index.css" rel="stylesheet">
-  <script src="src/index.js" defer></script>
-  <script src="src/carte.js" defer></script>
+  <!-- Vector layers -->
+  <!--
+<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css' rel='stylesheet' />
+<link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css' rel='stylesheet' />
+-->
+
+  <link href="assets/markercluster/MarkerCluster.css" rel="stylesheet" />
+  <script src="assets/markercluster/leaflet.markercluster-src.js"></script>
+  <script src="assets/leaflet-ajax/leaflet.ajax.min.js"></script>
+
+  <!-- This package -->
   <script src="src/templeteur.js" defer></script>
+  <script src="src/carte.js" defer></script>
+  <script src="src/index.js" defer></script>
+  <link href="src/index.css" rel="stylesheet">
 </head>
 
 <body id="carte"><!-- id = le nom de la page courante -->

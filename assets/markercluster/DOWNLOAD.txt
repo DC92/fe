@@ -1,0 +1,3 @@
+https://github.com/Leaflet/Leaflet.markercluster/tree/master?tab=readme-ov-file
+Download the v1.4.1 release
+https://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js

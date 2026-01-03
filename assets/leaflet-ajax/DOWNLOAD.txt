@@ -1,0 +1,2 @@
+https://github.com/calvinmetcalf/leaflet-ajax/tags
+v2.1.0

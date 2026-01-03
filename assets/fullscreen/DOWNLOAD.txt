@@ -1,0 +1,2 @@
+https://github.com/Leaflet/Leaflet.fullscreen/tags
+v1.0.2
