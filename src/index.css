@@ -125,6 +125,12 @@ body:not([class*="attente"]) .attente {
   background-image: url('../assets/gps/gps-icon.png');
 }
 
+.leaflet-tooltip {
+  padding: 0 2px;
+  line-height: 12px;
+  border-radius: 5px;
+}
+
 /* Avoid white lines between tiles in Opera & Chrome
  * See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
 .leaflet-container img.leaflet-tile {

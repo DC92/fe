@@ -1,13 +1,13 @@
-/* global L, requeteAPI, serveurApi, appliqueDonnees */
+/* global L, serveurApi, appliqueDonnees */
+
+//TODO simplifier API WRI
 
 /*****************
  * Carte Leaflet *
  *****************/
-// Initialise la carte avec les points des Alpes du Nord
 let map = null;
 
 const baseLayers = {
-  //TODO BUG ligne blanche entre dalles
   OpenHikingMap: L.tileLayer('https://tile.openmaps.fr/openhikingmap/{z}/{x}/{y}.png', {
     maxZoom: 18,
     attribution: '<a href="https://wiki.openstreetmap.org/wiki/OpenHikingMap">© OpenHikingMap</a>|' +
@@ -38,26 +38,26 @@ const baseLayers = {
   }),
 };
 
-const xxserveurApi = 'https://www.refuges.info',
-  wriClusterLayer = new L.MarkerClusterGroup(),
+const wriClusterLayer = new L.MarkerClusterGroup(),
   wriPoiLayer = L.geoJson(
-    JSON.parse(localStorage.getItem('poiwri')), {// First init with stored data
+    JSON.parse(localStorage.getItem('poiwri')), { // First init with stored data
       pointToLayer: (feature, latlng) =>
         L.marker(latlng, {
           icon: L.icon({
             iconSize: [24, 24],
             iconAnchor: [12, 12],
-            iconUrl: xxserveurApi + '/images/icones/' + feature.properties.type.icone + '.svg',
+            iconUrl: serveurApi + '/images/icones/' + feature.properties.type.icone + '.svg',
           }),
         }),
 
       onEachFeature: (feature, layer) => {
         // Etiquette sur les points
-        //TODO permanent label
         layer.bindTooltip(
           feature.properties.nom, {
+            permanent: true,
             direction: 'center',
-            offset: L.point(0, -24),
+            offset: L.point(0, -16),
+            opacity: 0.6,
           }
         ).openTooltip();
 
@@ -98,21 +98,19 @@ function initCarte() {
     L.Permalink.setup(map); //TODO BUG Interférence permalink templateur
 
     // WRI poi & clusters
-    wriClusterLayer.addLayer(wriPoiLayer);
+    wriPoiLayer.addTo(wriClusterLayer);
     wriClusterLayer.addTo(map);
 
-    requeteAPI(
-      'cartes',
-      '/api/bbox?&nb_points=all&bbox=4.8%2C44.5%2C7.4%2C46.2', // French north Apls
-      null,
-      json => {
-        localStorage.setItem('poiwri', JSON.stringify(json));
-        wriPoiLayer.clearLayers();
-        wriClusterLayer.clearLayers();
-        wriPoiLayer.addData(json);
-        wriClusterLayer.addLayer(wriPoiLayer);
-      }
-    );
+    // Refresh poiwri when available from server
+    (async function() {
+      const response = await fetch(serveurApi + '/api/bbox?&nb_points=all'),
+        json = await response.json();
+      localStorage.setItem('poiwri', JSON.stringify(json));
+      wriPoiLayer.clearLayers();
+      wriClusterLayer.clearLayers();
+      wriPoiLayer.addData(json);
+      wriClusterLayer.addLayer(wriPoiLayer);
+    })();
   }
 
   return map;
