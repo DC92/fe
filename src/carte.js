@@ -38,69 +38,41 @@ const baseLayers = {
   }),
 };
 
-/* GeoJson layer from remote url. Options:
- * iconUrl: '<url>' | function(feature),
- * iconWidth: 16, // (Pixels) for a square icon |
-    iconSize: [16, 16],
-    iconAnchor: [8, 8],
- * label: '<text>' | function(feature), //TO BE DONE
- * tooltip: '<text>' | function(feature),
- * click: function(feature),
- */
-class GeoJsonRemote extends L.geoJson {
-  constructor(options) {
-    const iw = options.iconWidth || 16;
-
-    super(options.json || null, {
+const xxserveurApi = 'https://www.refuges.info',
+  wriClusterLayer = new L.MarkerClusterGroup(),
+  wriPoiLayer = L.geoJson(
+    JSON.parse(localStorage.getItem('poiwri')), {// First init with stored data
       pointToLayer: (feature, latlng) =>
         L.marker(latlng, {
           icon: L.icon({
-            iconSize: [iw, iw],
-            iconAnchor: [iw / 2, iw / 2],
-            ...options,
-            iconUrl: typeof options.iconUrl === 'function' ? options.iconUrl(feature) : options.iconUrl,
+            iconSize: [24, 24],
+            iconAnchor: [12, 12],
+            iconUrl: xxserveurApi + '/images/icones/' + feature.properties.type.icone + '.svg',
           }),
         }),
 
       onEachFeature: (feature, layer) => {
         // Etiquette sur les points
         //TODO permanent label
-        if (options.tooltip)
-          layer.bindTooltip(
-            typeof options.tooltip === 'function' ? options.tooltip(feature) : options.tooltip, {
-              direction: 'center',
-              offset: L.point(0, -24),
-            }
-          ).openTooltip();
+        layer.bindTooltip(
+          feature.properties.nom, {
+            direction: 'center',
+            offset: L.point(0, -24),
+          }
+        ).openTooltip();
 
         // Click
-        if (options.click)
-          layer.on({
-            click: (evt) => options.click(feature, evt),
-          });
+        layer.on({
+          click: () => {
+            // Affiche les donnés d'entête de la fiche qui sont disponibles dans l'API bbox
+            appliqueDonnees('point', feature.properties);
+
+            // Affiche la page point
+            window.location.hash = 'point=' + feature.properties.id;
+          },
+        });
       },
-
-      ...options,
     });
-  }
-}
-
-const xxserveurApi = 'https://www.refuges.info';
-
-const wriClusterLayer = new L.MarkerClusterGroup(),
-  wriPoiLayer = new GeoJsonRemote({
-    json: JSON.parse(localStorage.getItem('poiwri')),
-    iconUrl: feature => xxserveurApi + '/images/icones/' + feature.properties.type.icone + '.svg',
-    iconWidth: 24,
-    tooltip: feature => feature.properties.nom,
-    click: feature => {
-      // Affiche les donnés d'entête de la fiche qui sont disponibles dans l'API bbox
-      appliqueDonnees('point', feature.properties);
-
-      // Affiche la page point
-      window.location.hash = 'point=' + feature.properties.id;
-    },
-  });
 
 /* eslint-disable-next-line no-unused-vars */
 function initCarte() {
