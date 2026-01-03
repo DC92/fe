@@ -46,12 +46,11 @@ const baseLayers = {
  * tooltip: '<text>' | function(feature),
  * click: function(feature),
  */
-
-class GeoJsonRemote extends L.GeoJSON.AJAX {
+class GeoJsonRemote extends L.geoJson {
   constructor(options) {
     const iw = options.iconWidth || 16;
 
-    super('https://www.refuges.info/api/bbox?&nb_points=all&bbox=4.8%2C44.5%2C7.4%2C46.2', {
+    super(null, {
       pointToLayer: (feature, latlng) =>
         L.marker(latlng, {
           icon: L.icon({
@@ -85,8 +84,8 @@ class GeoJsonRemote extends L.GeoJSON.AJAX {
   }
 }
 
-const wriPoiLayer =
-  new GeoJsonRemote({
+const wriClusterLayer = new L.MarkerClusterGroup(),
+  wriPoiLayer = new GeoJsonRemote({
     iconUrl: feature => serveurApi + '/images/icones/' + feature.properties.type.icone + '.svg',
     iconWidth: 24,
     tooltip: feature => feature.properties.nom,
@@ -122,46 +121,16 @@ function initCarte() {
 
     L.Permalink.setup(map); //TODO BUG Interférence permalink templateur
 
-    // Refuges.info points of interest
-    wriPoiLayer.addTo(map);
-
-    /////TODO !!! var barLayer = new L.GeoJSON.AJAX("json/eat_drink/bar.geojson", {
-    /*
- new L.GeoJSON.AJAX("json/eat_drink/bar.geojson", {
-    pointToLayer: function(feature, latlng) {
-        var icon = L.icon({
-                        iconSize: [27, 27],
-                        iconAnchor: [13, 27],
-                        popupAnchor:  [1, -24],
-                        iconUrl: 'icon/' + feature.properties.amenity + '.png'
-                        });
-        return L.marker(latlng, {icon: icon})
-    }, 
-    onEachFeature: function(feature, layer) {
-        layer.bindPopup(feature.properties.name + ': ' + feature.properties.opening_hours);
-    }
-});  */
-    //wriPoiLayer.AJAX('/api/bbox?&nb_points=all&bbox=4.8%2C44.5%2C7.4%2C46.2');
-    //const markers = new L.MarkerClusterGroup();
-
-    //TODO https://gis.stackexchange.com/questions/312278/displaying-geojson-using-ajax-and-leaflet
-    //map.addLayer(markers);
-    //wriPoiLayer.addTo(map);
-
-    //markers.addLayer(wriPoiLayer);
-    //map.addLayer(markers);
-    wriPoiLayer.on('data:loaded', function() { //TODO vérifier vraiment besoin ?
-      //  markers.addTo(mymap);
-    });
-    /*
     requeteAPI(
       'cartes',
       '/api/bbox?&nb_points=all&bbox=4.8%2C44.5%2C7.4%2C46.2', // French north Apls
       null,
       json => {
         wriPoiLayer.addData(json);
+        wriClusterLayer.addLayer(wriPoiLayer);
+        wriClusterLayer.addTo(map);
       }
-    );*/
+    );
   }
   map.invalidateSize(); // Recharge la carte
 
