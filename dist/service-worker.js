@@ -25,7 +25,6 @@ self.addEventListener('install', evt => {
           'favicon.svg',
           'index.html',
           'manifest.json',
-          'pwa.js',
           'service-worker.js',
 
           'src/carte.js',
@@ -47,6 +46,8 @@ self.addEventListener('install', evt => {
           'assets/markercluster/MarkerCluster.css',
           'assets/markercluster/MarkerCluster.Default.css',
           'assets/markercluster/leaflet.markercluster-src.js',
+
+          'https://www.refuges.info/api/bbox?&nb_points=all&detail=minimal',
         ])
         .then(console.info('PWA files added to cache'))
         .catch(error => console.error(error));

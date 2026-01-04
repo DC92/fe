@@ -1,7 +1,5 @@
 /* global L, serveurApi, appliqueDonnees */
 
-//TODO simplifier API WRI
-
 /*****************
  * Carte Leaflet *
  *****************/
@@ -14,6 +12,7 @@ const baseLayers = {
       '<a href="https://openmaps.fr/donate">❤️ Donation</a>|' +
       '<a href="http://www.openstreetmap.org/copyright">© OpenStreetMap</a>|' +
       '<a target="_blank" href="https://wiki.openstreetmap.org/wiki/OpenHikingMap#Map_Legend">Légende</a>',
+    //TODO Aspirateur dalles spirales
   }),
   OpenStreetMap: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -25,9 +24,8 @@ const baseLayers = {
   // https://ignf.github.io/geoportal-extensions/leaflet-latest/jsdoc/module-Layers.html#.WMTS
   /* eslint-disable-next-line new-cap */
   'Ign plan': L.geoportalLayer.WMTS({
-    //TODO BUG format non pris en compte
     layer: 'GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2',
-    format: 'image/png', //TODO BUG
+    format: 'image/png', //TODO BUG format non pris en compte
     'attribution': 'Orthophotos - Carte © IGN/Geoportail',
     'maxNativeZoom': 19,
     'maxZoom': 22,
@@ -40,8 +38,10 @@ const baseLayers = {
 
 const wriClusterLayer = new L.MarkerClusterGroup(),
   wriPoiLayer = L.geoJson(
-    JSON.parse(localStorage.getItem('poiwri')), { // First init with stored data
+    null, { // First init with stored data
       pointToLayer: (feature, latlng) =>
+        //TODO Sélecteur type points / autres couches vectorielles
+        //TODO Dedoubler points proches
         L.marker(latlng, {
           icon: L.icon({
             iconSize: [24, 24],
@@ -74,6 +74,8 @@ const wriClusterLayer = new L.MarkerClusterGroup(),
       },
     });
 
+//TODO https://github.com/plepe/overpass-frontend/blob/master/example-bbox.js
+
 /* eslint-disable-next-line no-unused-vars */
 function initCarte() {
   if (!map) {
@@ -102,6 +104,7 @@ function initCarte() {
     wriClusterLayer.addTo(map);
 
     // Refresh poiwri when available from server
+    //TODO replace by ajax
     (async function() {
       const response = await fetch(serveurApi + '/api/bbox?&nb_points=all&detail=minimal'),
         json = await response.json();

@@ -1,7 +1,7 @@
 /* global requeteAPI, initCarte, prepareModeleGroupe, appliqueDonnees */
 
 /* eslint-disable-next-line no-unused-vars */
-const serveurApi = 'https://www.refuges.info',
+const serveurApi = 'https://dom.refuges.info',
   nomPages = ['carte', 'point', 'nouvelles'];
 
 // Initialisation de la page lorsque l'URL principale est appelée ou l'ancre change

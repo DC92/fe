@@ -4,8 +4,8 @@
   "author": "Dominique Cavailhez",
   "type": "module",
   "scripts": {
-    "lint": "npx eslint *.js* dist/src/*.js",
-    "beautify": "js-beautify -s=2 *.js* dist/*.* dist/src/*"
+    "lint": "npx eslint *.js* dist/*.js* dist/src/*.js",
+    "beautify": "js-beautify -s=2 *.js* dist/[chj]*.* dist/src/[chj]*.*"
   },
   "dependencies": {
     "eslint": "latest",
