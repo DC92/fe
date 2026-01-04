@@ -103,8 +103,9 @@ function initCarte() {
 
     // Refresh poiwri when available from server
     (async function() {
-      const response = await fetch(serveurApi + '/api/bbox?&nb_points=all'),
+      const response = await fetch(serveurApi + '/api/bbox?&nb_points=all&detail=minimal'),
         json = await response.json();
+
       localStorage.setItem('poiwri', JSON.stringify(json));
       wriPoiLayer.clearLayers();
       wriClusterLayer.clearLayers();

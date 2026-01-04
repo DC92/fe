@@ -7,9 +7,13 @@ Ceci est un démonstrateur front-end pour refuges.info
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://www.refuges.info/images/icones/favicon.svg" rel="icon" type="image/svg+xml" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link href="favicon.svg" type="image/svg+xml" rel="icon" />
   <title>Refuges.info</title>
+
+  <!-- Progressive Web Application -->
+  <link href="manifest.json" rel="manifest">
+  <script src="pwa.js" defer></script>
 
   <!-- Leaflet -->
   <link href="assets/leaflet/leaflet.css" rel="stylesheet" />

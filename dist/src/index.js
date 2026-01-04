@@ -62,7 +62,7 @@ function affichePagePoint(pointId) {
   // Charge les données du points
   requeteAPI(
     'point',
-    '/api/point?detail=complet&format=geojson&format_texte=html&id=' + pointId,
+    '/api/point?format=geojson&format_texte=html&detail=complet&id=' + pointId,
     null,
     json => {
       const properties = json.features[0].properties,

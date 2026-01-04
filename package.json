@@ -1,12 +1,11 @@
 {
-  "name": "Lint & beautify",
+  "name": "Dev tools for WRI PWA",
   "version": "1.0.0",
-  "description": "Lint & beautify code",
   "author": "Dominique Cavailhez",
   "type": "module",
   "scripts": {
-    "lint": "npx eslint src/*.js",
-    "beautify": "js-beautify -s=2 *.html src/*.css src/*.js"
+    "lint": "npx eslint *.js* dist/src/*.js",
+    "beautify": "js-beautify -s=2 *.js* dist/*.* dist/src/*"
   },
   "dependencies": {
     "eslint": "latest",

@@ -1,0 +1,6 @@
+Les fichiers de ce répertoire gérent les outils de développement.
+Seul /dist est à installer en prod.
+
+Installer les node_modules : npm install
+Vérifier la syntaxe javascript : npm run lint
+Beautifier les sources : npm run beautify
