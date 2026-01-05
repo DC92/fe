@@ -1,4 +1,4 @@
-/* global L, GeoJsonAjaxCluster */
+/* global L, GeoJsonAjaxCluster, serveurApi, appliqueDonnees */
 
 /*****************
  * Carte Leaflet *
@@ -30,13 +30,14 @@ const baseLayers = {
     'maxNativeZoom': 19,
     'maxZoom': 22,
   }),
+
   /* eslint-disable-next-line new-cap */
   'Ign photo': L.geoportalLayer.WMTS({
     layer: 'ORTHOIMAGERY.ORTHOPHOTOS',
   }),
-};
 
-//TODO https://github.com/plepe/overpass-frontend/blob/master/example-bbox.js
+  //TODO https://github.com/plepe/overpass-frontend/blob/master/example-bbox.js
+};
 
 /* eslint-disable-next-line no-unused-vars */
 function initCarte() {
@@ -49,12 +50,10 @@ function initCarte() {
 
     new L.Control.Fullscreen().addTo(map);
 
-    //TODO BUG image controle trop grande sous FF
     new L.Control.Gps({
       autoCenter: true,
     }).addTo(map);
 
-    //TODO BUG image bouton trop grande sous FF
     new L.Control.Geocoder({
       position: 'topleft',
     }).addTo(map);
@@ -63,9 +62,22 @@ function initCarte() {
 
     // WRI poi & clusters
     new GeoJsonAjaxCluster({
-      url: '/api/bbox?&nb_points=all&detail=minimal',
+      url: serveurApi + '/api/bbox?&nb_points=all&detail=minimal',
       icon: {
-        width: 24,
+        url: feature => serveurApi + '/images/icones/' + feature.properties.type.icone + '.svg',
+        size: 24,
+      },
+      label: {
+        title: feature => feature.properties.nom,
+        permanent: true,
+        direction: 'center',
+      },
+      click: feature => {
+        // Affiche les donnés d'entête de la fiche qui sont disponibles dans l'API bbox
+        appliqueDonnees('point', feature.properties);
+
+        // Affiche la page point
+        window.location.hash = 'point=' + feature.properties.id;
       },
     }).addTo(map);
   }

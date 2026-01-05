@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "lint": "npx eslint *.js* dist/*.js* dist/src/*.js",
-    "beautify": "js-beautify -s=2 *.js* dist/*.[chj]* dist/src/*"
+    "beautify": "js-beautify -s=2 *.js* dist/*.[chj]* dist/src/*.[chj]*"
   },
   "dependencies": {
     "eslint": "latest",
