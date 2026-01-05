@@ -1,6 +1,5 @@
 /* global requeteAPI, initCarte, prepareModeleGroupe, appliqueDonnees */
 
-/* eslint-disable-next-line no-unused-vars */
 const nomPages = ['carte', 'point', 'nouvelles'];
 
 // Initialisation de la page lorsque l'URL principale est appelée ou l'ancre change

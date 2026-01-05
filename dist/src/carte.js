@@ -1,4 +1,4 @@
-/* global L, serveurApi, appliqueDonnees */
+/* global L, GeoJsonAjaxCluster */
 
 /*****************
  * Carte Leaflet *
@@ -36,44 +36,6 @@ const baseLayers = {
   }),
 };
 
-const wriClusterLayer = new L.MarkerClusterGroup(),
-  wriPoiLayer = L.geoJson(
-    null, { // First init with stored data
-      pointToLayer: (feature, latlng) =>
-        //TODO Sélecteur type points / autres couches vectorielles
-        //TODO Dedoubler points proches
-        L.marker(latlng, {
-          icon: L.icon({
-            iconSize: [24, 24],
-            iconAnchor: [12, 12],
-            iconUrl: serveurApi + '/images/icones/' + feature.properties.type.icone + '.svg',
-          }),
-        }),
-
-      onEachFeature: (feature, layer) => {
-        // Etiquette sur les points
-        layer.bindTooltip(
-          feature.properties.nom, {
-            permanent: true,
-            direction: 'center',
-            offset: L.point(0, -16),
-            opacity: 0.6,
-          }
-        ).openTooltip();
-
-        // Click
-        layer.on({
-          click: () => {
-            // Affiche les donnés d'entête de la fiche qui sont disponibles dans l'API bbox
-            appliqueDonnees('point', feature.properties);
-
-            // Affiche la page point
-            window.location.hash = 'point=' + feature.properties.id;
-          },
-        });
-      },
-    });
-
 //TODO https://github.com/plepe/overpass-frontend/blob/master/example-bbox.js
 
 /* eslint-disable-next-line no-unused-vars */
@@ -100,21 +62,12 @@ function initCarte() {
     L.Permalink.setup(map); //TODO BUG Interférence permalink templateur
 
     // WRI poi & clusters
-    wriPoiLayer.addTo(wriClusterLayer);
-    wriClusterLayer.addTo(map);
-
-    // Refresh poiwri when available from server
-    //TODO replace by ajax
-    (async function() {
-      const response = await fetch(serveurApi + '/api/bbox?&nb_points=all&detail=minimal'),
-        json = await response.json();
-
-      localStorage.setItem('poiwri', JSON.stringify(json));
-      wriPoiLayer.clearLayers();
-      wriClusterLayer.clearLayers();
-      wriPoiLayer.addData(json);
-      wriClusterLayer.addLayer(wriPoiLayer);
-    })();
+    new GeoJsonAjaxCluster({
+      url: '/api/bbox?&nb_points=all&detail=minimal',
+      icon: {
+        width: 24,
+      },
+    }).addTo(map);
   }
 
   return map;
