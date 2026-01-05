@@ -22,11 +22,11 @@ self.addEventListener('install', evt => {
     .then(cache => {
       console.info('PWA open cache ' + cacheName);
       cache.addAll([
-          'favicon.svg',
           'index.html',
           'manifest.json',
           'service-worker.js',
 
+          'src/favicon.svg',
           'src/carte.js',
           'src/index.css',
           'src/index.js',
