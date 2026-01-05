@@ -7,10 +7,7 @@ function changePage() {
   const ancre = window.location.hash.replace('#', '').split('=');
 
   // Attribue le nom de la page à l'ID du body
-  if (nomPages.includes(ancre[0]))
-    document.body.id = ancre[0];
-  else
-    document.body.id = 'carte';
+  document.body.id = nomPages.includes(ancre[0]) ? ancre[0] : 'carte';
 
   // Supprime tous les états d'affichage de la page précédente
   document.body.className = '';
