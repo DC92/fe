@@ -1,8 +1,5 @@
 <?php
-// Bypass PWA cache
+// Bypass PWA cache for debug
 header('Content-type: text/html');
-echo str_replace(
-  'service-worker.js',
-  'service-worker.js.php',
-  file_get_contents('index.html')
-);
+$f = file_get_contents('index.html');
+echo isset($_GET['d']) ? str_replace('navigator', '//', $f): $f;

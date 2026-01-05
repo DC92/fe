@@ -14,7 +14,9 @@ Ceci est un démonstrateur front-end pour refuges.info
   <!-- Progressive Web Application -->
   <link href="manifest.json" rel="manifest">
   <script>
-    navigator.serviceWorker.register('service-worker.js')
+    const serveurApi = 'https://dom.refuges.info';
+
+    navigator.serviceWorker.register('service-worker.js');
   </script>
 
   <!-- Leaflet -->
