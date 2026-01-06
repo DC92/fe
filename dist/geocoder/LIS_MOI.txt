@@ -1,3 +1,4 @@
-https://github.com/perliedman/leaflet-control-geocoder/
+DOC: https://github.com/perliedman/leaflet-control-geocoder/
+Downloads
 <link href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" rel="stylesheet" />
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
