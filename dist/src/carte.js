@@ -58,7 +58,7 @@ function initCarte() {
       position: 'topleft',
     }).addTo(map);
 
-    L.Permalink.setup(map); //TODO BUG Interférence permalink templateur
+    //L.Permalink.setup(map); //TODO BUG Interférence permalink templateur
 
     // WRI poi & clusters
     new GeoJsonAjaxCluster({
