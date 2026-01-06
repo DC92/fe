@@ -123,7 +123,7 @@ body:not([class*="attente"]) .attente {
 }
 
 .leaflet-control-gps .gps-button {
-  background-image: url('../assets/gps/gps-icon.png');
+  background-image: url('../gps/gps-icon.png');
 }
 
 .leaflet-tooltip {

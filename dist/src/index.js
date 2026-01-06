@@ -1,11 +1,6 @@
 /* global requeteAPI, initCarte, prepareModeleGroupe, appliqueDonnees */
 //TODO renommer ce fichier wri
 
-// Pour voir tous les Service Workers
-navigator.serviceWorker.getRegistrations().then(console.log);
-// Pour voir tous les caches
-caches.keys().then(console.log);
-
 const nomPages = ['carte', 'point', 'nouvelles'];
 
 // Initialisation de la page lorsque l'URL principale est appelée ou l'ancre change
