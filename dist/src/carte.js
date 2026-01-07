@@ -82,5 +82,31 @@ function initCarte() {
     }).addTo(map);
   }
 
+  map.on('moveend', () => {
+    // Load features from url
+    (async function() {
+      const bounds = this.map.getCenter(),
+        ecart = 2;
+
+      for (let zoom = 10; zoom < 16; zoom++) {
+        const coords = this.map.project([bounds.lat, bounds.lng], zoom),
+          cx = Math.floor(coords.x / 256),
+          cy = Math.floor(coords.y / 256);
+
+        for (let x = cx - ecart; x < cx + ecart; x++)
+          for (let y = cy - ecart; y < cy + ecart; y++) {
+            const url = 'https://tile.openmaps.fr/openhikingmap/' + zoom + '/' + x + '/' + y + '.png';
+
+            //TODO système pour ne pas redemander les mêmes !!!
+            console.log(url);
+            //await fetch(url);
+            //await fetch(url, { mode: 'no-cors' });
+          }
+      }
+    }).bind({
+      map: map,
+    })();
+  });
+
   return map;
 }
