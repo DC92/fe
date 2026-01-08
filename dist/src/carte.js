@@ -2,9 +2,9 @@
 
 //TODO commande recherche
 //TODO mémorisation position carte
-//TODO echèle / position ???
 //TODO BUG mauvais placement init de la fiche
-//TODO mémorisation info fiches autour de la position
+//TODO mémorisation info fiches WRI autour de la position
+//TODO GPS orientation carte
 
 /*****************
  * Carte Leaflet *
@@ -56,6 +56,10 @@ function initCarte() {
 
     new L.Control.Fullscreen().addTo(map);
 
+    L.control.scale({
+      imperial: false
+    }).addTo(map);
+
     new L.Control.Gps({
       autoCenter: true,
     }).addTo(map);
@@ -95,10 +99,6 @@ function initCarte() {
         preLoadedTiles = JSON.parse(localStorage.preLoadedTiles || '{}'),
         remnantTime = 30000; // Shelf life (unix milliseconds)
       let leftToFetch = 40;
-
-      for (const key in preLoadedTiles)
-        /*DCMM*/
-        console.log(key, preLoadedTiles[key] - Date.now(), !(preLoadedTiles[key] < Date.now()));
 
       for (let ecart = 1; ecart < 6; ecart++)
         for (let zoom = 6; zoom < 16; zoom++) {
