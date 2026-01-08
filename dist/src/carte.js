@@ -1,5 +1,11 @@
 /* global L, GeoJsonAjaxCluster, serveurApi, appliqueDonnees */
 
+//TODO commande recherche
+//TODO mémorisation position carte
+//TODO echèle / position ???
+//TODO BUG mauvais placement init de la fiche
+//TODO mémorisation info fiches autour de la position
+
 /*****************
  * Carte Leaflet *
  *****************/
@@ -82,27 +88,38 @@ function initCarte() {
     }).addTo(map);
   }
 
+  // Preload tiles of openhikingmap base layer
   map.on('moveend', () => {
-    // Load features from url
     (async function() {
       const bounds = this.map.getCenter(),
-        ecart = 2;
+        preLoadedTiles = JSON.parse(localStorage.preLoadedTiles || '{}'),
+        remnantTime = 30000; // Shelf life (unix milliseconds)
+      let leftToFetch = 40;
 
-      for (let zoom = 10; zoom < 16; zoom++) {
-        const coords = this.map.project([bounds.lat, bounds.lng], zoom),
-          cx = Math.floor(coords.x / 256),
-          cy = Math.floor(coords.y / 256);
+      for (const key in preLoadedTiles)
+        /*DCMM*/
+        console.log(key, preLoadedTiles[key] - Date.now(), !(preLoadedTiles[key] < Date.now()));
 
-        for (let x = cx - ecart; x < cx + ecart; x++)
-          for (let y = cy - ecart; y < cy + ecart; y++) {
-            const url = 'https://tile.openmaps.fr/openhikingmap/' + zoom + '/' + x + '/' + y + '.png';
+      for (let ecart = 1; ecart < 6; ecart++)
+        for (let zoom = 6; zoom < 16; zoom++) {
+          const coords = this.map.project([bounds.lat, bounds.lng], zoom),
+            dx = Math.round(coords.x / 256),
+            dy = Math.round(coords.y / 256);
 
-            //TODO système pour ne pas redemander les mêmes !!!
-            console.log(url);
-            //await fetch(url);
-            //await fetch(url, { mode: 'no-cors' });
-          }
-      }
+          for (let x = dx - ecart; x < dx + ecart; x++)
+            for (let y = dy - ecart; y < dy + ecart; y++) {
+              const tileRef = zoom + '/' + x + '/' + y,
+                expirationDate = (preLoadedTiles[tileRef] || 0) + remnantTime,
+                url = 'https://tile.openmaps.fr/openhikingmap/' + tileRef + '.png';
+
+              if (expirationDate < Date.now() && leftToFetch-- > 0) {
+                preLoadedTiles[tileRef] = Date.now();
+                await fetch(url);
+              }
+            }
+
+          localStorage.preLoadedTiles = JSON.stringify(preLoadedTiles);
+        }
     }).bind({
       map: map,
     })();
