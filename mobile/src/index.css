@@ -64,7 +64,7 @@ body:not([class*="attente"]) .attente {
   font-size: 1.3em;
 }
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 499px) {
   .bandeau span {
     display: none;
   }

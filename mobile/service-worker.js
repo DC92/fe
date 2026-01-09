@@ -4,6 +4,8 @@
 
 const cacheName = 'refuges.info';
 
+console.log('Init PWA');
+
 // Fetch any ressource, cache first with cache refresh
 async function cacheFirstWithRefresh(request) {
   const fetchResponsePromise =

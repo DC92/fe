@@ -1,9 +1,7 @@
 /* global L, GeoJsonAjaxCluster, serveurApi, appliqueDonnees */
 
-//TODO taille carte limitée pour grands écrans
-//TODO commande recherche
-//TODO mémorisation position carte
 //TODO BUG mauvais placement init de la fiche
+//TODO mémorisation position carte
 //TODO mémorisation info fiches WRI autour de la position
 //TODO Fonctions ctrl clic suivant demande faite à wri github
 
