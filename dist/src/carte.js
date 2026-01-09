@@ -1,10 +1,11 @@
 /* global L, GeoJsonAjaxCluster, serveurApi, appliqueDonnees */
 
+//TODO taille carte limitée pour grands écrans
 //TODO commande recherche
 //TODO mémorisation position carte
 //TODO BUG mauvais placement init de la fiche
 //TODO mémorisation info fiches WRI autour de la position
-//TODO GPS orientation carte
+//TODO Fonctions ctrl clic suivant demande faite à wri github
 
 /*****************
  * Carte Leaflet *
@@ -53,8 +54,6 @@ function initCarte() {
     // Layer switcher
     Object.values(baseLayers)[0].addTo(map); // Default layer
     L.control.layers(baseLayers).addTo(map);
-
-    new L.Control.Fullscreen().addTo(map);
 
     L.control.scale({
       imperial: false
