@@ -1,7 +1,10 @@
-/* global requeteAPI, initCarte, prepareModeleGroupe, appliqueDonnees */
-//TODO renommer ce fichier wri
+/* global requeteAPI, initCarte, prepareModeleGroupe, appliqueDonnees, preLoad, preLoadPoints, idbKeyval, serveurAPI */
 
-const nomPages = ['carte', 'point', 'nouvelles'];
+const nomPages = ['carte', 'point', 'nouvelles'],
+  map = initCarte('map');
+
+// Prè-charge les dalles OpenHikingMap, points et commentaires autour de la zone visitée
+map.on('moveend', () => preLoad(map, map.getCenter()));
 
 // Initialisation de la page lorsque l'URL principale est appelée ou l'ancre change
 function changePage() {
@@ -14,7 +17,7 @@ function changePage() {
   document.body.className = '';
 
   // Execute la function d'initialisation de la page
-  const nomFonctionAffiche = 'affichePage' + document.body.id.replace(/^[a-z]/u, m => m.toUpperCase());
+  const nomFonctionAffiche = 'affichePage' + document.body.id.replace(/^[a-z]/u, (m) => m.toUpperCase());
   window[nomFonctionAffiche](ancre[1]);
 }
 
@@ -26,7 +29,7 @@ window.addEventListener('popstate', changePage); // L'ancre change ou navigation
  **************/
 /* eslint-disable-next-line no-unused-vars */
 function affichePageCarte() {
-  initCarte().setView([45, 5.5], 13);
+  map.setView([45, 5.5], 10); // Puits des Ravières
 }
 
 /******************
@@ -38,13 +41,13 @@ function affichePageNouvelles() {
     'nouvelles',
     '/api/contributions?format=json&format_texte=html&massif=352&nombre=10',
     null,
-    json => {
+    (json) => {
       // Calcule le lien pour afficher la page qui correspond
       for (const j in json)
         /* eslint-disable-next-line camelcase */
         json[j].lien_interne = '#point=' + json[j].id_point;
 
-      prepareModeleGroupe('nouvelles-groupe', Object.keys(json).length - 1); // -1 pour le copyright
+      prepareModeleGroupe('nouvelles-groupe', Object.keys(json).length - 1); // -1 pour la ligne copyright dans le json
       appliqueDonnees('nouvelles-groupe', json);
     }
   );
@@ -54,18 +57,19 @@ function affichePageNouvelles() {
  * Page point *
  **************/
 /* eslint-disable-next-line no-unused-vars */
-function affichePagePoint(pointId) {
-  // Charge les données du points
-  requeteAPI(
-    'point',
-    '/api/point?format=geojson&format_texte=html&detail=complet&id=' + pointId,
-    null,
-    json => {
-      const properties = json.features[0].properties,
+async function affichePagePoint(idPoint) {
+  const properties =
+    await idbKeyval.get(parseInt(idPoint, 10)) || // Si le point est préchargé
+    await preLoadPoints(serveurAPI + '/api/point?detail=complet&nb_points=all&id=' + idPoint); // Essaye de le charger
+
+  console.log(properties); ////
+
+  /*
+  map.setView([properties.coord.lat, properties.coord.long], 15);
+
+       const properties = json.features[0].properties,
         coords = json.features[0].geometry.coordinates,
         infoComp = {};
-
-      initCarte().setView([coords[1], coords[0]], 15);
 
       // Infos complémentaires
       // Filtre les infos non signifiantes
@@ -80,7 +84,7 @@ function affichePagePoint(pointId) {
 
       // Infos de la fiche
       //BEST enlever titre de la rubrique quand elle est vide
-      /* eslint-disable-next-line camelcase */
+      /* eslint-disable-next-line camelcase * /
       properties.lien_externe = '/point/' + properties.id;
       appliqueDonnees('point', properties);
     }
@@ -89,11 +93,12 @@ function affichePagePoint(pointId) {
   // Charge les données des commentaires
   requeteAPI(
     'commentaires',
-    '/api/commentaires?format=json&format_texte=html&id_point=' + pointId,
+    '/api/commentaires?format=json&format_texte=html&id_point=' + idPoint,
     null,
-    json => {
+    (json) => {
       prepareModeleGroupe('commentaires-groupe', Object.keys(json).length - 1); // -1 pour le copyright
       appliqueDonnees('commentaires-groupe', json);
     }
   );
+  */
 }

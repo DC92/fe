@@ -1,4 +1,4 @@
-/* global L, GeoJsonAjaxCluster, serveurApi, appliqueDonnees */
+/* global L, GeoJsonAjaxCluster, appliqueDonnees, serveurAPI */
 
 //TODO BUG mauvais placement init de la fiche
 //TODO mémorisation position carte
@@ -8,8 +8,6 @@
 /*****************
  * Carte Leaflet *
  *****************/
-let map = null;
-
 const baseLayers = {
   OpenHikingMap: L.tileLayer('https://tile.openmaps.fr/openhikingmap/{z}/{x}/{y}.png', {
     maxZoom: 18,
@@ -45,82 +43,47 @@ const baseLayers = {
 };
 
 /* eslint-disable-next-line no-unused-vars */
-function initCarte() {
-  if (!map) {
-    map = L.map('map');
+function initCarte(containerElId) {
+  const map = L.map(containerElId);
 
-    // Layer switcher
-    Object.values(baseLayers)[0].addTo(map); // Default layer
-    L.control.layers(baseLayers).addTo(map);
+  // Layer switcher
+  Object.values(baseLayers)[0].addTo(map); // Default layer
+  L.control.layers(baseLayers).addTo(map);
 
-    L.control.scale({
-      imperial: false
-    }).addTo(map);
+  L.control.scale({
+    imperial: false
+  }).addTo(map);
 
-    new L.Control.Gps({
-      autoCenter: true,
-    }).addTo(map);
+  new L.Control.Gps({
+    autoCenter: true,
+  }).addTo(map);
 
-    new L.Control.Geocoder({
-      position: 'topleft',
-    }).addTo(map);
+  new L.Control.Geocoder({
+    position: 'topleft',
+  }).addTo(map);
 
-    //L.Permalink.setup(map); //TODO BUG Interférence permalink templateur
+  //L.Permalink.setup(map); //TODO BUG Interférence permalink templateur
 
-    // WRI poi & clusters
-    new GeoJsonAjaxCluster({
-      url: serveurApi + '/api/bbox?&nb_points=all&detail=minimal',
-      icon: {
-        url: feature => serveurApi + '/images/icones/' + feature.properties.type.icone + '.svg',
-        size: 24,
-      },
-      label: {
-        title: feature => feature.properties.nom,
-        permanent: true,
-        direction: 'center',
-      },
-      click: feature => {
-        // Affiche les donnés d'entête de la fiche qui sont disponibles dans l'API bbox
-        appliqueDonnees('point', feature.properties);
+  // WRI poi & clusters
+  new GeoJsonAjaxCluster({
+    url: serveurAPI + '/api/bbox?&nb_points=all&detail=minimal',
+    icon: {
+      url: (feature) => serveurAPI + '/images/icones/' + feature.properties.type.icone + '.svg',
+      size: 24,
+    },
+    label: {
+      title: (feature) => feature.properties.nom,
+      permanent: true,
+      direction: 'center',
+    },
+    click: (feature) => {
+      // Affiche les donnés d'entête de la fiche qui sont disponibles dans l'API bbox
+      appliqueDonnees('point', feature.properties);
 
-        // Affiche la page point
-        window.location.hash = 'point=' + feature.properties.id;
-      },
-    }).addTo(map);
-  }
-
-  // Preload tiles of openhikingmap base layer
-  map.on('moveend', () => {
-    (async function() {
-      const bounds = this.map.getCenter(),
-        preLoadedTiles = JSON.parse(localStorage.preLoadedTiles || '{}'),
-        remnantTime = 30000; // Shelf life (unix milliseconds)
-      let leftToFetch = 40;
-
-      for (let ecart = 1; ecart < 6; ecart++)
-        for (let zoom = 6; zoom < 16; zoom++) {
-          const coords = this.map.project([bounds.lat, bounds.lng], zoom),
-            dx = Math.round(coords.x / 256),
-            dy = Math.round(coords.y / 256);
-
-          for (let x = dx - ecart; x < dx + ecart; x++)
-            for (let y = dy - ecart; y < dy + ecart; y++) {
-              const tileRef = zoom + '/' + x + '/' + y,
-                expirationDate = (preLoadedTiles[tileRef] || 0) + remnantTime,
-                url = 'https://tile.openmaps.fr/openhikingmap/' + tileRef + '.png';
-
-              if (expirationDate < Date.now() && leftToFetch-- > 0) {
-                preLoadedTiles[tileRef] = Date.now();
-                await fetch(url);
-              }
-            }
-
-          localStorage.preLoadedTiles = JSON.stringify(preLoadedTiles);
-        }
-    }).bind({
-      map: map,
-    })();
-  });
+      // Affiche la page point
+      window.location.hash = 'point=' + feature.properties.id;
+    },
+  }).addTo(map);
 
   return map;
 }

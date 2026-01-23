@@ -4,11 +4,17 @@
 
 const cacheName = 'refuges.info';
 
-console.log('Init PWA');
+console.info('Service worker loaded');
+
+self.skipWaiting(); // Immediately activate the SW & trigger controllerchange
+
+self.addEventListener('install', () => {
+  console.info('Service worker installed');
+});
 
 // Fetch any ressource, cache first with cache refresh
 async function cacheFirstWithRefresh(request) {
-  const fetchResponsePromise =
+  return (await caches.match(request)) ||
     fetch(request)
     .then(async (networkResponse) => {
       if (networkResponse.ok) {
@@ -17,8 +23,6 @@ async function cacheFirstWithRefresh(request) {
       }
       return networkResponse;
     });
-
-  return (await caches.match(request)) || (await fetchResponsePromise);
 }
 
 self.addEventListener('fetch', (event) => {

@@ -72,7 +72,7 @@ body:not([class*="attente"]) .attente {
 
 /* Page carte */
 #carte #map {
-  height: min(100vw, 900px, calc(100% - 36px));
+  height: min(900px, calc(100% - 36px));
   width: min(100%, 1200px);
   margin: auto;
 }
@@ -110,8 +110,8 @@ body:not([class*="attente"]) .attente {
 
 /* Général */
 .attente {
+  margin: 0 2px;
   padding: 10px 0;
-  width: calc(100% - 8px);
   border: 5px solid red;
   border-style: double;
   text-align: center;
@@ -140,4 +140,11 @@ body:not([class*="attente"]) .attente {
   mix-blend-mode: normal;
   width: 256px !important;
   height: 256px !important;
+}
+
+/* DEBUG ONLY */
+@media screen and (max-width: 200px) {
+  #carte #map {
+    max-height: 100vw;
+  }
 }

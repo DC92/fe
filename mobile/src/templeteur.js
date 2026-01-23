@@ -1,4 +1,4 @@
-/* global serveurApi, XMLHttpRequest */
+/* global XMLHttpRequest, serveurAPI */
 
 /******************
  * Appel de l'API *
@@ -10,7 +10,7 @@ function requeteAPI(nom, url, donneesPost, callBack) {
   // Affiche le panneau d'attente le temps que XMLHttpRequest réponde
   document.body.classList.add('attente-api-' + nom);
 
-  req.open(donneesPost ? 'POST' : 'GET', serveurApi + url, true);
+  req.open(donneesPost ? 'POST' : 'GET', serveurAPI + url, true);
   req.onload = () => {
     callBack(JSON.parse(req.responseText));
     document.body.classList.remove('attente-api-' + nom);
@@ -39,11 +39,11 @@ function appliqueDonnees(id, value) {
     if (el.tagName === 'IMG' && value && value[0] === '/')
       el.src = value;
     if (el.tagName === 'IMG' && value)
-      el.src = serveurApi + value;
+      el.src = serveurAPI + value;
     else if (el.tagName === 'A' && value[0] === '#')
       el.href = value;
     else if (el.tagName === 'A')
-      el.href = serveurApi + value;
+      el.href = serveurAPI + value;
     else
       el.innerHTML = value;
   }
@@ -65,7 +65,7 @@ function prepareModeleGroupe(id, nb) {
 
   // Nettoie les éléments de données existants
   groupEl.querySelectorAll('[id^="' + id + '"]')
-    .forEach(el => appliqueDonnees(el.id, ''));
+    .forEach((el) => appliqueDonnees(el.id, ''));
 
   // Ajoute autant de modeles que nécéssaire
   while (groupEl.children.length < nb)
